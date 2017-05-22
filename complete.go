@@ -212,7 +212,11 @@ func (o *opCompleter) CompleteRefresh() {
 	colIdx := 0
 	lines := 1
 	buf.WriteString("\033[J")
-	for idx, c := range o.candidate {
+	candidate := o.candidate
+	if len(candidate) > 100 {
+		candidate = candidate[:100]
+	}
+	for idx, c := range candidate {
 		inSelect := idx == o.candidateChoise && o.IsInCompleteSelectMode()
 		if inSelect {
 			buf.WriteString("\033[30;47m")
