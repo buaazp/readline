@@ -25,9 +25,10 @@ func (t *TabCompleter) Do([]rune, int) ([][]rune, int) {
 }
 
 type opCompleter struct {
-	w     io.Writer
-	op    *Operation
-	width int
+	w         io.Writer
+	op        *Operation
+	width     int
+	showCount int
 
 	inCompleteMode  bool
 	inSelectMode    bool
@@ -38,11 +39,12 @@ type opCompleter struct {
 	candidateColNum int
 }
 
-func newOpCompleter(w io.Writer, op *Operation, width int) *opCompleter {
+func newOpCompleter(w io.Writer, op *Operation, width, showCount int) *opCompleter {
 	return &opCompleter{
-		w:     w,
-		op:    op,
-		width: width,
+		w:         w,
+		op:        op,
+		width:     width,
+		showCount: showCount,
 	}
 }
 
@@ -213,8 +215,8 @@ func (o *opCompleter) CompleteRefresh() {
 	lines := 1
 	buf.WriteString("\033[J")
 	candidate := o.candidate
-	if len(candidate) > 100 {
-		candidate = candidate[:100]
+	if o.showCount > 0 && len(candidate) > o.showCount {
+		candidate = candidate[:o.showCount]
 	}
 	for idx, c := range candidate {
 		inSelect := idx == o.candidateChoise && o.IsInCompleteSelectMode()

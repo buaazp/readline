@@ -51,6 +51,7 @@ type Config struct {
 	EOFPrompt       string
 
 	FuncGetWidth func() int
+	ShowCount    int
 
 	Stdin  io.Reader
 	Stdout io.Writer
